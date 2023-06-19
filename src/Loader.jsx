@@ -8,9 +8,9 @@ function Loader() {
     return (
       <>
        <Html center>
-          <Text style={{ width: '400px' ,textAlign:'center'}} h2>{Math.round(progress)}%</Text>
+          <Text style={{ width: '200px' ,textAlign:'center'}} h2>{Math.round(progress)}%</Text>
               <Progress
-                style={{ width: '400px' }}
+                style={{ width: '200px' }}
                 value={Math.round(progress)}
                 color="warning"
               />

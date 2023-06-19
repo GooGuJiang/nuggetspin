@@ -61,7 +61,7 @@ function App() {
     <Helmet>
         <title>{t('pageTitle')}</title>
     </Helmet>
-    <Canvas shadows dpr={[1, 2]} camera={{ fov: 50 }}>
+    <Canvas shadows dpr={[1, 2]} camera={{ fov: 50,position:[350,60,300]}}>
     <EffectComposer>
           <Pixelation granularity={5} />
           <BrightnessContrast
