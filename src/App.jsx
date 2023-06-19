@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect, Suspense  } from 'react'
 import { Canvas  } from '@react-three/fiber'
 import { OrbitControls, Html } from '@react-three/drei'
 import { Perf } from 'r3f-perf'
-import { Pixelation,EffectComposer,BrightnessContrast} from '@react-three/postprocessing'
+import { Pixelation,EffectComposer,BrightnessContrast,Noise} from '@react-three/postprocessing'
 
 import Sence from './Sence'
 import Loader from './Loader'
@@ -32,6 +32,7 @@ function App() {
           brightness={0} // brightness. min: -1, max: 1
           contrast={-0.1} // contrast: min -1, max: 1
         />
+        <Noise opacity={0.02} />
     </EffectComposer>
       <Perf />
       {loaded && (
