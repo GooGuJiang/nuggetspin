@@ -1,11 +1,39 @@
 import React, { useRef, useState, useEffect, Suspense  } from 'react'
 import { Canvas  } from '@react-three/fiber'
-import { OrbitControls, Html } from '@react-three/drei'
+import { OrbitControls, Html ,CameraShake} from '@react-three/drei'
 import { Perf } from 'r3f-perf'
 import { Pixelation,EffectComposer,BrightnessContrast,Noise} from '@react-three/postprocessing'
 
 import Sence from './Sence'
 import Loader from './Loader'
+
+//NextUI
+import { Button } from "@nextui-org/react";
+
+
+//i18n
+
+import i18n from 'i18next';
+import { initReactI18next,useTranslation  } from 'react-i18next';
+import Backend from 'i18next-http-backend';
+import LanguageDetector from 'i18next-browser-languagedetector';
+import { Helmet } from 'react-helmet';
+
+i18n
+  .use(Backend)
+  .use(LanguageDetector)
+  .use(initReactI18next)
+  .init({
+    fallbackLng: 'en', // 默认语言
+    detection: {
+      order: ['navigator'], // 优先使用浏览器语言设置进行检测
+    },
+    backend: {
+      // 配置语言资源的加载路径
+      loadPath: '/locales/{{lng}}/{{ns}}.json',
+    },
+    // 更多的配置选项...
+  });
 
 
 function App() {
@@ -13,6 +41,11 @@ function App() {
   const [ready, setReady] = useState(false)
   const [isCilck, setIsCilck] = useState(false)
   const [loaded, setLoaded] = useState(false)
+
+  
+  const { t } = useTranslation();
+
+  const [isdebug, setisdebug] = useState(false)
 
   const handleClick = () => {
     setReady(true)
@@ -25,7 +58,10 @@ function App() {
 
   return (
     <>
-    <Canvas shadows dpr={[1, 2]} camera={{ fov: 50, position: [650,150, 500] }}>
+    <Helmet>
+        <title>{t('pageTitle')}</title>
+    </Helmet>
+    <Canvas shadows dpr={[1, 2]} camera={{ fov: 50 }}>
     <EffectComposer>
           <Pixelation granularity={5} />
           <BrightnessContrast
@@ -34,18 +70,20 @@ function App() {
         />
         <Noise opacity={0.02} />
     </EffectComposer>
-      <Perf />
+      {isdebug && (<Perf />)}
       {loaded && (
         <Html center>
-          <button style={{
+          <Button shadow color="warning"  flat style={{
             width: '100px',
             display: isCilck ? 'none' : 'block',
-          }} onClick={handleClick}>点击开始</button>
+          }} onClick={handleClick}>{t('buttonText')}</Button>
         </Html>
       )}
       <Suspense fallback={<Loader />}>
         <Sence ready={ready} isLoop={isCilck} onLoad={handleLoaded} />
         <OrbitControls ref={ref} 
+          //设置默认相机位置
+          target={[0, 0, 0]}
           minDistance={120} 
           maxDistance={150}
           enablePan={false}

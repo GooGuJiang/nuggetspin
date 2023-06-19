@@ -10,13 +10,22 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@nextui-org/react": "1.0.0-beta.13",
+    "@react-spring/core": "^9.7.2",
+    "@react-spring/three": "^9.7.2",
+    "@react-spring/web": "^9.7.2",
     "@react-three/drei": "^9.77.0",
     "@react-three/fiber": "^8.13.3",
     "@react-three/postprocessing": "^2.14.11",
     "@types/three": "^0.152.1",
+    "i18next": "^23.2.0",
+    "i18next-browser-languagedetector": "^7.0.2",
+    "i18next-http-backend": "^2.2.1",
     "r3f-perf": "^7.1.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-helmet": "^6.1.0",
+    "react-i18next": "^13.0.0",
     "three": "^0.153.0"
   },
   "devDependencies": {
