@@ -9,7 +9,7 @@ import Loader from './Loader'
 
 //NextUI
 import { Button } from "@nextui-org/react";
-
+import { Text} from '@nextui-org/react';
 
 //i18n
 
@@ -73,7 +73,7 @@ function App() {
       {isdebug && (<Perf />)}
       {loaded && (
         <Html center>
-          <Button shadow color="warning"  flat style={{
+          <Button shadow color="warning" flat style={{
             width: '100px',
             display: isCilck ? 'none' : 'block',
           }} onClick={handleClick}>{t('buttonText')}</Button>
