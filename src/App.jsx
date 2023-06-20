@@ -63,7 +63,7 @@ function App() {
     </Helmet>
     <Canvas shadows dpr={[1, 2]} camera={{ fov: 50,position:[350,60,300]}}>
     <EffectComposer>
-          <Pixelation granularity={5} />
+          
           <BrightnessContrast
           brightness={0} // brightness. min: -1, max: 1
           contrast={-0.1} // contrast: min -1, max: 1
@@ -80,7 +80,7 @@ function App() {
         </Html>
       )}
       <Suspense fallback={<Loader />}>
-        <Sence ready={ready} isLoop={isCilck} onLoad={handleLoaded} />
+        <Sence adjustCamera={false} ready={ready} isLoop={isCilck} onLoad={handleLoaded} />
         <OrbitControls ref={ref} 
           //设置默认相机位置
           target={[0, 0, 0]}
