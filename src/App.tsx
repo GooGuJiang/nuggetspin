@@ -12,20 +12,22 @@ import { useEffect } from 'react'
 import { useControls } from 'leva'
 
 function App() {
-  const { isLoop } = useControls({ isLoop: false })
+  const { isLoop,isPixelation } = useControls({ 
+    isLoop: false,
+    isPixelation: false
+  })
   //TODO: 添加后期处理像素化开关
 
   return (
     <>
-     <Canvas shadows dpr={[1, 2]} camera={{ fov: 50,position:[100,60,200]}}>
+     <Canvas shadows dpr={[3, 3]} camera={{fov: 50,position:[100,60,200]}}>
      <EffectComposer>
-          {}
           <BrightnessContrast
           brightness={0} // brightness. min: -1, max: 1
-          contrast={-0.1} // contrast: min -1, max: 1
+          contrast={0.05} // contrast: min -1, max: 1
         />
     </EffectComposer>
-     <Stage adjustCamera={false} preset="rembrandt" intensity={1}  environment={{
+     <Stage adjustCamera={false} preset="rembrandt" intensity={0.5}  environment={{
         path: "/hdri/",
         files: ["px.png", "nx.png", "py.png", "ny.png", "pz.png", "nz.png"],
       }}>
