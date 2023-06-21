@@ -47,6 +47,9 @@ function App() {
           maxAzimuthAngle={0}
         />
      </Canvas>
+     <div className="fixed left-0 bottom-0 p-4 font-bold text-orange-400">
+     <span>Made By </span><a className="text-orange-500 hover:text-orange-400" href="https://ggj.moe/about">@咕谷酱</a>
+    </div>
     </>
   )
 }
