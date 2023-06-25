@@ -70,9 +70,6 @@ function App() {
   const handleClick = () => {
     axios.get('https://api.nuggetspin.mov/click', {
     })
-    .then(res => {
-      //console.log(res.data);
-    })
     .catch(err => {
       console.error(err);
     });
