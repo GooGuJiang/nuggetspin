@@ -80,9 +80,7 @@ function App() {
 
   return (
     <>
-      <Helmet>
-          <title>{t("title-main")}</title>
-      </Helmet>
+      
       <Sound src="/assets/music.mp3" volume={0.4}
       onDuration={setAllkValue}
       onSoundLoad={setSoundPlay} 
