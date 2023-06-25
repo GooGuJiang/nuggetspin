@@ -1,4 +1,7 @@
 {
-    "pageTitle": "旋转鸡块",
-    "buttonText": "开始旋转!"
+    "start":"开始旋转",
+    "made-1":"由 ",
+    "made-2":"@咕谷酱",
+    "made-3":" 制作",
+    "clicks":"点击数"
 }

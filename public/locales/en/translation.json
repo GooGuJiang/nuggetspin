@@ -1,4 +1,7 @@
 {
-    "pageTitle": "NUGGET SPEENS",
-    "buttonText": "Start Rotating!"
+    "start":"PLAY",
+    "made-1":"Made by ",
+    "made-2":"@GooGuJiang",
+    "made-3":" "
+    "clicks":"Clicks"
 }
