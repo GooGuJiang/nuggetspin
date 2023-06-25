@@ -79,7 +79,7 @@ function App() {
   return (
     <>
     
-      <Sound src="/music.mp3" volume={0.4}
+      <Sound src="/assets/music.mp3" volume={0.4}
       onDuration={setAllkValue}
       onSoundLoad={setSoundPlay} 
       />
@@ -97,7 +97,6 @@ function App() {
         <div className="flex justify-center items-center">
         <img src="/logo.svg" alt="Logo" style={{
           top:"-150px",
-          transform: "rotate(45deg)",
         }} className=" rotate-animation w-32 h-32 absolute transform -translate-y-1/2" />
           <button 
           onClick={() => {
@@ -137,7 +136,7 @@ function App() {
         </div>
       </Html>)}
       <Stage adjustCamera={false} preset="rembrandt" intensity={0.5}  environment={{
-          path: "/hdri/",
+          path: "/assets/hdri/",
           files: ["px.png", "nx.png", "py.png", "ny.png", "pz.png", "nz.png"],
         }}>
           <Model scale={0.09} isLoop={isLoop} rotation={[0,-0.7,0]} />

@@ -24,7 +24,7 @@ type GLTFResult = GLTF & {
 
 
 export function Model(props: JSX.IntrinsicElements['group'] & { isLoop: boolean }) {
-  const { nodes, materials } = useGLTF('/model-transformed.glb') as GLTFResult
+  const { nodes, materials } = useGLTF('/assets/model-transformed.glb') as GLTFResult
   const animation = useAnimation();
   const { isLoop } = props;
 
@@ -56,4 +56,4 @@ export function Model(props: JSX.IntrinsicElements['group'] & { isLoop: boolean 
   )
 }
 
-useGLTF.preload('/model-transformed.glb')
+useGLTF.preload('/assets/model-transformed.glb')
