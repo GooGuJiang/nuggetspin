@@ -2,12 +2,13 @@ import { Canvas  } from '@react-three/fiber'
 import { Stage, Html } from '@react-three/drei'
 
 //import { Pixelation,EffectComposer,BrightnessContrast,Noise} from '@react-three/postprocessing'
+import axios from 'axios';
 
 import './App.css'
 
 import { Model } from './Model/Model'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState,Suspense } from 'react'
 
 import { Perf } from 'r3f-perf'
 
@@ -18,6 +19,8 @@ import { CameraControls } from './Camera/Camera'
 import { useTranslation } from 'react-i18next';
 
 import {  FaCirclePlay } from "react-icons/fa6";
+
+import Loader from './Loader/Loader'
 
 function App() {
   const [iSbutton, setButton] = useState(false);
@@ -37,6 +40,19 @@ function App() {
 
   const { t } = useTranslation();
 
+  const [clickCount, setClickCount] = useState<number>(0);
+
+  useEffect(() => {
+    axios.get('https://api.nuggetspin.mov/total')
+      .then(res => {
+        setClickCount(res.data.total_clicks);
+      })
+      .catch(err => {
+        console.error(err);
+        setClickCount(0);
+      });
+  }, []);
+
   useEffect(() => {
     const interval = setInterval(() => {
       if (soundPlay) {
@@ -51,56 +67,92 @@ function App() {
     return () => clearInterval(interval);
   }, [soundPlay, AllkValue]);
 
+  const handleClick = () => {
+    axios.get('https://api.nuggetspin.mov/click', {
+    })
+    .then(res => {
+      //console.log(res.data);
+    })
+    .catch(err => {
+      console.error(err);
+    });
+  };
+  
+
   return (
     <>
-    <Sound src="/music.mp3" volume={0.4}
-    onDuration={setAllkValue}
-    onSoundLoad={setSoundPlay} 
-    />
-     <Canvas shadows dpr={[1, 2]} camera={{fov: 50}}>
-     {isDebug && (<Perf
-        position="bottom-right"
-     />)}
-     { !iSbutton && (<Html
-      style={{
-        width: '100vw',
-      }}
-     center>
-      <div className="flex justify-center items-center">
-        <button 
-        onClick={() => {
-          setTimeout(() => {
-            soundPlay!.play();
-            setLoop(true)
-          }, 2100);
-          setButton(true)
-          setOrbitControls(true)
-          setCameraPosition({x: 0, y: 3, z: 10})
-          setCameraDuration(2)
-          setCameraEasing("power3.inOut")
+    
+      <Sound src="/music.mp3" volume={0.4}
+      onDuration={setAllkValue}
+      onSoundLoad={setSoundPlay} 
+      />
+      <Canvas shadows dpr={[1, 2]} camera={{fov: 50}}>
+      <Suspense fallback={<Loader />}>
+      {isDebug && (<Perf
+          position="bottom-right"
+      />)}
+      { !iSbutton && (<Html
+        style={{
+          width: '100vw',
         }}
-        className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-8 rounded-md">
-         <div className="flex items-center">
-         <FaCirclePlay className="text-4xl  mr-2" />
-          <span className="text-4xl">{t("start")}</span>
-        </div>
-        </button>
-      </div>
-     </Html>)}
-     <Stage adjustCamera={false} preset="rembrandt" intensity={0.5}  environment={{
-        path: "/hdri/",
-        files: ["px.png", "nx.png", "py.png", "ny.png", "pz.png", "nz.png"],
-      }}>
-        <Model scale={0.09} isLoop={isLoop} rotation={[0,-0.7,0]} />
-      </Stage>
+      center>
         
-        <CameraControls position={cameraPosition} target={cameraTarget} duration={cameraDuration} ease={cameraEasing} isOrbitControls={isOrbitControls}/>
-     </Canvas>
-     <div className="fixed left-0 bottom-0 p-4 font-bold">
-      <span className="text-orange-400 text-opacity-50">{t("made-1")}</span>
-        <a className="text-orange-500 hover:text-orange-400 text-opacity-50" href="https://github.com/googujiang">{t("made-2")}</a>
-      <span className="text-orange-400 text-opacity-50">{t("made-3")}</span>
-    </div>
+        <div className="flex justify-center items-center">
+        <img src="/logo.svg" alt="Logo" style={{
+          top:"-150px",
+          transform: "rotate(45deg)",
+        }} className=" rotate-animation w-32 h-32 absolute transform -translate-y-1/2" />
+          <button 
+          onClick={() => {
+            setTimeout(() => {
+              soundPlay!.play();
+              setLoop(true)
+            }, 2100);
+            setButton(true)
+            setOrbitControls(true)
+            setCameraPosition({x: 0, y: 3, z: 10})
+            setCameraDuration(2)
+            setCameraEasing("power3.inOut")
+            handleClick();
+          }}
+          className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-8 rounded-md">
+          <div className="flex items-center">
+          <FaCirclePlay className="text-4xl  mr-2" />
+            <span className="text-4xl">{t("start")}</span>
+          </div>
+          </button>
+          <div className='top-32 bg-orange-300 absolute transform -translate-y-1/2 rounded-md'
+          style={{
+            width: '200px',
+            height: '60px',
+          }}
+          >
+            <p className='text-center text-white font-bold'
+            style={{
+              marginTop: '2px',
+            }}
+            >{t("clicks")}</p>
+            <p className='text-center text-2xl text-white font-bold'
+            style={{
+            }}
+            >{clickCount}</p>
+          </div>
+        </div>
+      </Html>)}
+      <Stage adjustCamera={false} preset="rembrandt" intensity={0.5}  environment={{
+          path: "/hdri/",
+          files: ["px.png", "nx.png", "py.png", "ny.png", "pz.png", "nz.png"],
+        }}>
+          <Model scale={0.09} isLoop={isLoop} rotation={[0,-0.7,0]} />
+        </Stage>
+          <CameraControls position={cameraPosition} target={cameraTarget} duration={cameraDuration} ease={cameraEasing} isOrbitControls={isOrbitControls}/>
+        </Suspense>
+      </Canvas>
+      <div className="fixed left-0 bottom-0 p-4 font-bold ">
+        <span className="text-orange-400 text-opacity-50">{t("made-1")}</span>
+          <a className="text-orange-500 hover:text-orange-400 text-opacity-50" href="https://github.com/googujiang">{t("made-2")}</a>
+        <span className="text-orange-400 text-opacity-50">{t("made-3")}</span>
+      </div>
     </>
   )
 }
