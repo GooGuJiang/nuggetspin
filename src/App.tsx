@@ -1,6 +1,8 @@
 import { Canvas  } from '@react-three/fiber'
 import { Stage, Html } from '@react-three/drei'
 
+import { Helmet } from 'react-helmet'
+
 //import { Pixelation,EffectComposer,BrightnessContrast,Noise} from '@react-three/postprocessing'
 import axios from 'axios';
 
@@ -78,7 +80,9 @@ function App() {
 
   return (
     <>
-    
+      <Helmet>
+          <title>{t("title")}</title>
+      </Helmet>
       <Sound src="/assets/music.mp3" volume={0.4}
       onDuration={setAllkValue}
       onSoundLoad={setSoundPlay} 
