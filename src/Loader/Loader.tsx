@@ -2,7 +2,7 @@ import { useProgress, Html } from '@react-three/drei';
 
 function Loader() {
   const { active, progress, errors, item, loaded, total } = useProgress();
-  console.log(Math.round(progress));
+  //console.log(Math.round(progress));
 
   return (
     <>
