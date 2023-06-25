@@ -1,71 +1,105 @@
 import { Canvas  } from '@react-three/fiber'
-import { OrbitControls, Stage,Html } from '@react-three/drei'
+import { Stage, Html } from '@react-three/drei'
 
-import { Pixelation,EffectComposer,BrightnessContrast,Noise} from '@react-three/postprocessing'
+//import { Pixelation,EffectComposer,BrightnessContrast,Noise} from '@react-three/postprocessing'
 
 import './App.css'
 
 import { Model } from './Model/Model'
 
-import { useEffect } from 'react'
-
-import { useControls } from 'leva'
+import { useEffect, useState } from 'react'
 
 import { Perf } from 'r3f-perf'
 
+import { Howl } from 'howler';
+import Sound from './Sound/Sound';
+import { CameraControls } from './Camera/Camera'
+
+import { useTranslation } from 'react-i18next';
+
+import {  FaCirclePlay } from "react-icons/fa6";
+
 function App() {
-  const { isLoop,isPixelation } = useControls({ 
-    isLoop: false,
-    isPixelation: false
-  })
-  //TODO: 添加后期处理像素化开关
+  const [iSbutton, setButton] = useState(false);
+  const [isLoop, setLoop] = useState(false);
+  const [isOrbitControls, setOrbitControls] = useState(false);
+
+  const [isDebug, setDebug] = useState(false);
+
+  const [cameraPosition, setCameraPosition] = useState({x: 0, y: 2, z: 100});
+  const [cameraTarget, setCameraTarget] = useState({x: 0, y: 0, z: 0});
+  const [cameraDuration, setCameraDuration] = useState(0);
+  const [cameraEasing, setCameraEasing] = useState('');
+
+  const [soundPlay, setSoundPlay] = useState<Howl | null>(null);
+  const [seekValue, setSeekValue] = useState<number>(0);
+  const [AllkValue, setAllkValue] = useState<number>(0);
+
+  const { t } = useTranslation();
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (soundPlay) {
+        if (soundPlay.playing()) {
+          let seek = soundPlay.seek() as number;
+          setSeekValue(seek);
+        } else {
+          setSeekValue(0);
+        }
+      }
+    }, 1);
+    return () => clearInterval(interval);
+  }, [soundPlay, AllkValue]);
 
   return (
     <>
-     <Canvas shadows dpr={[3, 3]} camera={{fov: 50,position:[100,60,200]}}>
-     <Perf
+    <Sound src="/music.mp3" volume={0.4}
+    onDuration={setAllkValue}
+    onSoundLoad={setSoundPlay} 
+    />
+     <Canvas shadows dpr={[1, 2]} camera={{fov: 50}}>
+     {isDebug && (<Perf
         position="bottom-right"
-     />
-     <Html
+     />)}
+     { !iSbutton && (<Html
       style={{
         width: '100vw',
       }}
      center>
       <div className="flex justify-center items-center">
-        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-          <h3>Click Me</h3>
+        <button 
+        onClick={() => {
+          setTimeout(() => {
+            soundPlay!.play();
+            setLoop(true)
+          }, 2100);
+          setButton(true)
+          setOrbitControls(true)
+          setCameraPosition({x: 0, y: 3, z: 10})
+          setCameraDuration(2)
+          setCameraEasing("power3.inOut")
+        }}
+        className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-8 rounded-md">
+         <div className="flex items-center">
+         <FaCirclePlay className="text-4xl  mr-2" />
+          <span className="text-4xl">{t("start")}</span>
+        </div>
         </button>
       </div>
-     </Html>
+     </Html>)}
      <Stage adjustCamera={false} preset="rembrandt" intensity={0.5}  environment={{
         path: "/hdri/",
         files: ["px.png", "nx.png", "py.png", "ny.png", "pz.png", "nz.png"],
       }}>
-        <Model isLoop={isLoop} rotation={[0,-0.7,0]} />
+        <Model scale={0.09} isLoop={isLoop} rotation={[0,-0.7,0]} />
       </Stage>
-        <OrbitControls
-          //设置默认相机位置
-          minDistance={120} 
-          maxDistance={150}
-          enablePan={false}
-          //限制相机的上下旋转角度
-          minPolarAngle={Math.PI /100}
-          maxPolarAngle={Math.PI / 2}
-          //限制相机的左右旋转角度
-          minAzimuthAngle={0}
-          maxAzimuthAngle={0}
-        />
+        
+        <CameraControls position={cameraPosition} target={cameraTarget} duration={cameraDuration} ease={cameraEasing} isOrbitControls={isOrbitControls}/>
      </Canvas>
-
      <div className="fixed left-0 bottom-0 p-4 font-bold">
-      <span className="text-orange-400 text-opacity-50">Made by </span>
-      <a className="text-orange-500 hover:text-orange-400 text-opacity-50" href="https://ggj.moe/about">@咕谷酱</a>
-    </div>
-
-     <div className="fixed left-0 bottom-0 p-4 font-bold">
-      <span className="text-orange-400 text-opacity-50">由 </span>
-        <a className="text-orange-500 hover:text-orange-400 text-opacity-50" href="https://ggj.moe/about">@咕谷酱</a>
-      <span className="text-orange-400 text-opacity-50"> 制作</span>
+      <span className="text-orange-400 text-opacity-50">{t("made-1")}</span>
+        <a className="text-orange-500 hover:text-orange-400 text-opacity-50" href="https://github.com/googujiang">{t("made-2")}</a>
+      <span className="text-orange-400 text-opacity-50">{t("made-3")}</span>
     </div>
     </>
   )
