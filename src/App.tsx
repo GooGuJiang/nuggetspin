@@ -73,9 +73,9 @@ function App() {
     controls.start({
       scale: 0,
       opacity: 0,
-      rotate: 360,
-      transition: { duration: 0.5 },
-    });
+      y: -500,
+      transition: { duration: 0.5, ease: "easeInOut" },
+    });    
   };
   
 
