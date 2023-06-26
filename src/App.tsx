@@ -1,28 +1,20 @@
 import { Canvas  } from '@react-three/fiber'
 import { Stage, Html } from '@react-three/drei'
-
 import { Helmet } from 'react-helmet'
-
 //import { Pixelation,EffectComposer,BrightnessContrast,Noise} from '@react-three/postprocessing'
 import axios from 'axios';
-
 import './App.css'
-
 import { Model } from './Model/Model'
-
 import { useEffect, useState,Suspense } from 'react'
-
 import { Perf } from 'r3f-perf'
-
 import { Howl } from 'howler';
 import Sound from './Sound/Sound';
 import { CameraControls } from './Camera/Camera'
-
 import { useTranslation } from 'react-i18next';
-
 import {  FaCirclePlay } from "react-icons/fa6";
-
 import Loader from './Loader/Loader'
+
+import { motion, useAnimation } from "framer-motion";
 
 function App() {
   const [iSbutton, setButton] = useState(false);
@@ -43,6 +35,8 @@ function App() {
   const { t } = useTranslation();
 
   const [clickCount, setClickCount] = useState<number>(0);
+
+  const controls = useAnimation();
 
   useEffect(() => {
     axios.get('https://api.nuggetspin.mov/total')
@@ -75,6 +69,13 @@ function App() {
     .catch(err => {
       console.error(err);
     });
+
+    controls.start({
+      scale: 0,
+      opacity: 0,
+      rotate: 360,
+      transition: { duration: 0.5 },
+    });
   };
   
 
@@ -97,31 +98,34 @@ function App() {
           width: '100vw',
         }}
       center>
-        
-        <div className="flex justify-center items-center">
+        <motion.div animate={controls} className="flex justify-center items-center">
         <img src="/logo.svg" alt="Logo" style={{
-          top:"-150px",
+          top:"-180px",
         }} className=" rotate-animation w-32 h-32 absolute transform -translate-y-1/2" />
-          <button 
+          <motion.button 
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
           onClick={() => {
             setTimeout(() => {
               soundPlay!.play();
               setLoop(true)
             }, 2100);
+            setTimeout(() => {
             setButton(true)
+            }, 510);
             setOrbitControls(true)
             setCameraPosition({x: 0, y: 3, z: 10})
             setCameraDuration(2)
             setCameraEasing("power3.inOut")
             handleClick();
           }}
-          className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-8 rounded-md">
+          className="bg-orange-500 text-white font-bold py-4 px-8 rounded-md">
           <div className="flex items-center">
           <FaCirclePlay className="text-4xl  mr-2" />
             <span className="text-4xl">{t("start")}</span>
           </div>
-          </button>
-          <div className='top-32 bg-orange-300 absolute transform -translate-y-1/2 rounded-md'
+          </motion.button>
+          <div className='top-44 bg-orange-300 absolute transform -translate-y-1/2 rounded-md'
           style={{
             width: '200px',
             height: '60px',
@@ -137,7 +141,7 @@ function App() {
             }}
             >{clickCount}</p>
           </div>
-        </div>
+        </motion.div>
       </Html>)}
       <Stage adjustCamera={false} preset="rembrandt" intensity={0.5}  environment={{
           path: "/assets/hdri/",
