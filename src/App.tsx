@@ -69,7 +69,7 @@ function App() {
     .catch(err => {
       console.error(err);
     });
-
+    
     controls.start({
       scale: 0,
       opacity: 0,
