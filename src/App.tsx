@@ -80,7 +80,9 @@ function App() {
 
   return (
     <>
-      
+    <Helmet>
+      <title>{t("title-main")}</title>
+    </Helmet>
       <Sound src="/assets/music.mp3" volume={0.4}
       onDuration={setAllkValue}
       onSoundLoad={setSoundPlay} 
@@ -147,9 +149,7 @@ function App() {
         </Suspense>
       </Canvas>
       <div className="fixed left-0 bottom-0 p-4 font-bold ">
-        <span className="text-orange-400 text-opacity-50">{t("made-1")}</span>
-          <a className="text-orange-500 hover:text-orange-400 text-opacity-50" href="https://github.com/googujiang">{t("made-2")}</a>
-        <span className="text-orange-400 text-opacity-50">{t("made-3")}</span>
+          <a className="text-orange-500 hover:text-orange-400 text-opacity-50" href="https://github.com/googujiang">{t("made")}</a>
       </div>
     </>
   )
