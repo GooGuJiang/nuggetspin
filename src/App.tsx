@@ -22,7 +22,7 @@ import { motion, useAnimation } from "framer-motion";
 import ModSwitch from './Switch/Switch'
 
 function getFontSize(value: number): string {
-  const baseSize = 1.5;
+  const baseSize = 1.3;
   const decrement = 0.1;
   const length = value.toString().length;
 
