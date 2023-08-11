@@ -8,7 +8,7 @@ import CountUp from 'react-countup';
 import axios from 'axios';
 import './App.css'
 import { Model } from './Model/Model'
-import { useEffect, useState,Suspense } from 'react'
+import { useEffect, useState,Suspense, useRef } from 'react'
 import { Perf } from 'r3f-perf'
 import { Howl } from 'howler';
 import Sound from './Sound/Sound';
@@ -20,6 +20,18 @@ import Loader from './Loader/Loader'
 import { motion, useAnimation } from "framer-motion";
 
 import ModSwitch from './Switch/Switch'
+
+function getFontSize(value: number): string {
+  const baseSize = 1.5;
+  const decrement = 0.1;
+  const length = value.toString().length;
+
+  const steps = Math.floor((length - 1) / 2);
+
+  const newSize = baseSize - (steps * decrement);
+
+  return `${newSize}em`;
+}
 
 
 function App() {
@@ -48,8 +60,8 @@ function App() {
 
   const bgColor = isSpace ? '#000' : '#fff';
 
+
   useEffect(() => {
-    if(!loaderComplete) return
     axios.get('https://api.nuggetspin.mov/total')
       .then(res => {
         setClickCount(res.data.total_clicks);
@@ -178,8 +190,13 @@ function App() {
                     className="text-center text-2xl text-white font-bold"
                     style={{
                     }}
-                  >
-                    <CountUp end={clickCount} />
+                  >{
+                    loaderComplete ? (
+                      <CountUp end={clickCount} delay={0.5} style={{ fontSize: getFontSize(clickCount) }} />
+                    ) : (
+                      <CountUp end={0} style={{ fontSize: '2em' }} />
+                    )
+                  }
                   </p>
                 </div>
               </motion.div>
