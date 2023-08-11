@@ -194,7 +194,7 @@ function App() {
                     loaderComplete ? (
                       <CountUp end={clickCount} delay={0.5} style={{ fontSize: getFontSize(clickCount) }} />
                     ) : (
-                      <CountUp end={0} style={{ fontSize: '2em' }} />
+                      <CountUp end={0} style={{ fontSize: getFontSize(clickCount) }} />
                     )
                   }
                   </p>
