@@ -1,8 +1,21 @@
 import { useProgress, Html } from '@react-three/drei';
+import { useEffect } from 'react';
 
-function Loader() {
+type LoaderProps = {
+  onComplete: () => void;
+};
+
+
+function Loader({ onComplete }: LoaderProps) {
   const { active, progress, errors, item, loaded, total } = useProgress();
   //console.log(Math.round(progress));
+
+  useEffect(() => {
+      if (Math.round(progress) === 100) {
+        onComplete();
+      }
+  }, [progress, onComplete]);
+
 
   return (
     <>

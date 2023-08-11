@@ -3,6 +3,7 @@ import { Stage, Html,Stars } from '@react-three/drei'
 import { Helmet } from 'react-helmet'
 //import { Pixelation,EffectComposer,BrightnessContrast,Noise} from '@react-three/postprocessing'
 import { EffectComposer,Pixelation } from '@react-three/postprocessing'
+import CountUp from 'react-countup';
 
 import axios from 'axios';
 import './App.css'
@@ -28,6 +29,8 @@ function App() {
   const [isDebug, setDebug] = useState(false);
   const [isSpace, setIsSpace] = useState(false);
 
+  const [loaderComplete, setLoaderComplete] = useState(false);
+
   const [cameraPosition, setCameraPosition] = useState({x: 0, y: 2, z: 100});
   const [cameraTarget, setCameraTarget] = useState({x: 0, y: 0, z: 0});
   const [cameraDuration, setCameraDuration] = useState(0);
@@ -46,6 +49,7 @@ function App() {
   const bgColor = isSpace ? '#000' : '#fff';
 
   useEffect(() => {
+    if(!loaderComplete) return
     axios.get('https://api.nuggetspin.mov/total')
       .then(res => {
         setClickCount(res.data.total_clicks);
@@ -104,7 +108,7 @@ function App() {
         onSoundLoad={setSoundPlay}
       />
       <Canvas shadows dpr={[1, 2]} camera={{ fov: 50 }}>
-        <Suspense fallback={<Loader />}>
+        <Suspense fallback={<Loader onComplete={() => setLoaderComplete(true)} />}>
         <EffectComposer >
           <Pixelation 
             granularity={2.8}
@@ -175,7 +179,7 @@ function App() {
                     style={{
                     }}
                   >
-                    {clickCount}
+                    <CountUp end={clickCount} />
                   </p>
                 </div>
               </motion.div>
