@@ -88,7 +88,8 @@ function App() {
 
   return (
     <motion.div
-    animate={{ backgroundColor: bgColor }}
+    animate={{ backgroundColor: bgColor,
+    }}
     transition={{ duration: 0.1, ease: "easeInOut" }}
     style={{ width: "100%", height: "100%" }}
     initial={{ backgroundColor: bgColor }}
