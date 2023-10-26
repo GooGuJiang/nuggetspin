@@ -1,10 +1,8 @@
-// api/total.ts
 const MongoClient = require("mongodb").MongoClient;
-
 
 const uri = process.env.MONGODB_URI;
 
-export default async (req, res) => {
+const handleRequest = async (req, res) => {
   if (req.method !== 'GET') {
     res.status(405).end(); // 只接受GET请求
     return;
@@ -22,3 +20,5 @@ export default async (req, res) => {
 
   await client.close();
 };
+
+module.exports = handleRequest;

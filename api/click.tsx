@@ -1,9 +1,8 @@
-// api/click.ts
 const MongoClient = require("mongodb").MongoClient;
 
 const uri = process.env.MONGODB_URI;
 
-export default async (req, res) => {
+const handleClick = async (req, res) => {
   if (req.method !== 'POST') {
     res.status(405).end(); // 只接受POST请求
     return;
@@ -27,3 +26,5 @@ export default async (req, res) => {
 
   await client.close();
 };
+
+module.exports = handleClick;
