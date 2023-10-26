@@ -62,7 +62,7 @@ function App() {
 
 
   useEffect(() => {
-    axios.get('https://api.nuggetspin.mov/total')
+    axios.get('/api/total')
       .then(res => {
         setClickCount(res.data.total_clicks);
       })
@@ -87,7 +87,7 @@ function App() {
   }, [soundPlay, AllkValue]);
 
   const handleClick = () => {
-    axios.get('https://api.nuggetspin.mov/click', {
+    axios.post('/api/click', {
     })
     .catch(err => {
       console.error(err);
