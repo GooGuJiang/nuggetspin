@@ -6,12 +6,10 @@
 */
 
 import * as THREE from 'three'
-import { useEffect } from 'react'
+import { useRef } from 'react'
 import { useGLTF } from '@react-three/drei'
+import { ThreeElements, useFrame } from '@react-three/fiber'
 import { GLTF } from 'three-stdlib'
-
-import { useAnimation } from 'framer-motion';
-import { motion } from 'framer-motion-3d';
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -23,30 +21,26 @@ type GLTFResult = GLTF & {
 }
 
 
-export function Model(props: JSX.IntrinsicElements['group'] & { isLoop: boolean }) {
-  const { nodes, materials } = useGLTF('/assets/model-transformed.glb') as GLTFResult
-  const animation = useAnimation();
+export function Model(props: ThreeElements['group'] & { isLoop: boolean }) {
+  const { nodes, materials } = useGLTF('/assets/model-transformed.glb') as unknown as GLTFResult
+  const meshRef = useRef<THREE.Mesh>(null);
   const { isLoop } = props;
 
-  useEffect(() => {
-    if (isLoop) {
-      animation.start({
-        rotateY: [0, Math.PI * 2],
-        y: [55, 70, 55],
-        transition: {
-          rotateY: { duration: 1.5, repeat: Infinity, ease: "linear" },
-          y: { duration: 0.98, repeat: Infinity, ease: "easeInOut" },
-        },
-      });
-    } else {
-      animation.stop();
+  useFrame(({ clock }) => {
+    if (!isLoop || !meshRef.current) {
+      return;
     }
-  }, [isLoop]);
+
+    const elapsed = clock.getElapsedTime();
+    meshRef.current.rotation.y = (elapsed / 1.5) * Math.PI * 2;
+    meshRef.current.position.y = 62.5 + Math.sin((elapsed / 0.98) * Math.PI * 2) * 7.5;
+  });
 
   return (
     <group {...props} dispose={null}>
-      <motion.mesh
-      animate={animation}
+      <mesh
+      ref={meshRef}
+      castShadow
       geometry={nodes.Object_2.geometry} 
       material={materials.material_0} 
       position={[0.953, 50.977, -5.217]} 

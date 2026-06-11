@@ -7,7 +7,7 @@ type LoaderProps = {
 
 
 function Loader({ onComplete }: LoaderProps) {
-  const { active, progress, errors, item, loaded, total } = useProgress();
+  const { progress } = useProgress();
   //console.log(Math.round(progress));
 
   useEffect(() => {

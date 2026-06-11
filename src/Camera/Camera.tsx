@@ -1,8 +1,9 @@
 //Camera.tsx
-import { OrbitControls,CameraShake  } from "@react-three/drei";
+import { OrbitControls  } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
+import { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import gsap from "gsap";
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { Vector3 } from "three";
 
 
@@ -23,12 +24,10 @@ interface Props {
 const CameraControls = ({ position, target, duration ,ease,isOrbitControls}: Props) => {
 const {
     camera,
-    gl: { domElement },
 } = useThree();
-const ref = useRef<any>(null);
+const ref = useRef<OrbitControlsImpl>(null);
 
-camera.up = new Vector3(0, 1, 0);
-function cameraAnimate(): void {
+const cameraAnimate = useCallback((): void => {
     if (ref.current) {
     gsap.timeline().to(camera.position, {
         duration: duration, // use the new property
@@ -52,16 +51,19 @@ function cameraAnimate(): void {
         "<"
     );
     }
-}
+}, [camera.position, duration, ease, position.x, position.y, position.z, target.x, target.y, target.z]);
+
+useEffect(() => {
+    camera.up.copy(new Vector3(0, 1, 0));
+}, [camera.up]);
 
 useEffect(() => {
     cameraAnimate();
-}, [target, position, duration]); // add duration to the dependency array
+}, [cameraAnimate]); // add duration to the dependency array
 
 return (<>
 <OrbitControls
     ref={ref}
-    args={[camera, domElement]}
     panSpeed={1}
     minPolarAngle={Math.PI / 6} // 将最小极角设为30度
     maxPolarAngle={Math.PI / 2}

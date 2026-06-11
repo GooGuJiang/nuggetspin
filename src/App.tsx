@@ -1,30 +1,27 @@
 import { Canvas  } from '@react-three/fiber'
-import { Stage, Html,Stars } from '@react-three/drei'
-import { Helmet } from 'react-helmet'
+import { Stage, Html,Stars, Stats } from '@react-three/drei'
 //import { Pixelation,EffectComposer,BrightnessContrast,Noise} from '@react-three/postprocessing'
 import { EffectComposer,Pixelation } from '@react-three/postprocessing'
-import CountUp from 'react-countup';
 
 import axios from 'axios';
 import './App.css'
 import { Model } from './Model/Model'
-import { useEffect, useState,Suspense, useRef } from 'react'
-import { Perf } from 'r3f-perf'
+import { useEffect, useState,Suspense } from 'react'
 import { Howl } from 'howler';
 import Sound from './Sound/Sound';
 import { CameraControls } from './Camera/Camera'
 import { useTranslation } from 'react-i18next';
-import {  FaCirclePlay } from "react-icons/fa6";
 import Loader from './Loader/Loader'
+import { IoPlayCircle } from 'react-icons/io5'
 
 import { motion, useAnimation } from "framer-motion";
 
 import ModSwitch from './Switch/Switch'
 
-function getFontSize(value: number): string {
+function getFontSize(value = 0): string {
   const baseSize = 1.3;
   const decrement = 0.1;
-  const length = value.toString().length;
+  const length = String(value).length;
 
   const steps = Math.floor((length - 1) / 2);
 
@@ -38,18 +35,17 @@ function App() {
   const [iSbutton, setButton] = useState(false);
   const [isLoop, setLoop] = useState(false);
   const [isOrbitControls, setOrbitControls] = useState(false);
-  const [isDebug, setDebug] = useState(false);
+  const [isDebug] = useState(false);
   const [isSpace, setIsSpace] = useState(false);
 
   const [loaderComplete, setLoaderComplete] = useState(false);
 
   const [cameraPosition, setCameraPosition] = useState({x: 0, y: 2, z: 100});
-  const [cameraTarget, setCameraTarget] = useState({x: 0, y: 0, z: 0});
+  const [cameraTarget] = useState({x: 0, y: 0, z: 0});
   const [cameraDuration, setCameraDuration] = useState(0);
   const [cameraEasing, setCameraEasing] = useState('');
 
   const [soundPlay, setSoundPlay] = useState<Howl | null>(null);
-  const [seekValue, setSeekValue] = useState<number>(0);
   const [AllkValue, setAllkValue] = useState<number>(0);
 
   const { t } = useTranslation();
@@ -62,9 +58,14 @@ function App() {
 
 
   useEffect(() => {
+    document.title = t("title-main");
+  }, [t]);
+
+
+  useEffect(() => {
     axios.get('/api/total')
       .then(res => {
-        setClickCount(res.data.total_clicks);
+        setClickCount(Number(res.data?.total_clicks ?? 0));
       })
       .catch(err => {
         console.error(err);
@@ -76,10 +77,9 @@ function App() {
     const interval = setInterval(() => {
       if (soundPlay) {
         if (soundPlay.playing()) {
-          let seek = soundPlay.seek() as number;
-          setSeekValue(seek);
+          soundPlay.seek() as number;
         } else {
-          setSeekValue(0);
+          soundPlay.seek(0);
         }
       }
     }, 1);
@@ -110,9 +110,6 @@ function App() {
     style={{ width: "100%", height: "100%" }}
     initial={{ backgroundColor: bgColor }}
   >
-      <Helmet>
-        <title>{t("title-main")}</title>
-      </Helmet>
       <Sound
         src="/assets/music.mp3"
         volume={0.5}
@@ -127,9 +124,7 @@ function App() {
           />
         </EffectComposer>
           {isDebug && (
-            <Perf
-              position="bottom-right"
-            />
+            <Stats />
           )}
           {!iSbutton && (
             <Html
@@ -167,7 +162,7 @@ function App() {
                   className="bg-orange-500 text-white font-bold py-4 px-8 rounded-md"
                 >
                   <div className="flex items-center">
-                    <FaCirclePlay className="text-4xl mr-2" />
+                    <IoPlayCircle aria-hidden="true" className="text-4xl mr-2" />
                     <span className="text-4xl">{t("start")}</span>
                   </div>
                 </motion.button>
@@ -190,13 +185,10 @@ function App() {
                     className="text-center text-2xl text-white font-bold"
                     style={{
                     }}
-                  >{
-                    loaderComplete ? (
-                      <CountUp end={clickCount} delay={0.5} style={{ fontSize: getFontSize(clickCount) }} />
-                    ) : (
-                      <CountUp end={0} style={{ fontSize: getFontSize(clickCount) }} />
-                    )
-                  }
+                  >
+                    <span style={{ fontSize: getFontSize(loaderComplete ? clickCount : 0) }}>
+                      {loaderComplete ? clickCount : 0}
+                    </span>
                   </p>
                 </div>
               </motion.div>
@@ -206,6 +198,16 @@ function App() {
             adjustCamera={false}
             preset="rembrandt"
             intensity={0.5}
+            shadows={{
+              type: 'accumulative',
+              scale: 12,
+              opacity: 0.45,
+              alphaTest: 0.85,
+              resolution: 512,
+              frames: 80,
+              color: '#000000',
+              colorBlend: 2,
+            }}
             environment={{
               path: "/assets/hdri/",
               files: ["px.png", "nx.png", "py.png", "ny.png", "pz.png", "nz.png"],

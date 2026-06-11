@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Howl } from 'howler';
 
 interface SoundProps {
@@ -10,9 +10,6 @@ interface SoundProps {
 }
 
 const Sound: React.FC<SoundProps> = ({ src, volume = 1, onSoundLoad , onDuration,isPlaying}) => {
-  const [soundLoaded, setSoundLoaded] = useState(false);
-  const [isPlayingState, setIsPlayingState] = useState(false);
-
   useEffect(() => {
   const newSound = new Howl({
     src: [src],
@@ -22,25 +19,26 @@ const Sound: React.FC<SoundProps> = ({ src, volume = 1, onSoundLoad , onDuration
   });
 
   newSound.once('load', () => {
-    setSoundLoaded(true);
     onSoundLoad(newSound);
     onDuration(newSound.duration());
   });
 
   newSound.on('play', () => {
-    setIsPlayingState(true);
     if (isPlaying) {
       isPlaying(true);
     }
   });
 
   newSound.on('end', () => {
-    setIsPlayingState(false);
     if (isPlaying) {
       isPlaying(false);
     }
   });
-}, [soundLoaded,isPlayingState]);
+
+  return () => {
+    newSound.unload();
+  };
+}, [isPlaying, onDuration, onSoundLoad, src, volume]);
 
   return null;
 }
