@@ -7,6 +7,15 @@ export const CAMERA_INTRO_ANIMATION = {
   ease: 'power3.inOut',
 };
 
+export const CAMERA_ORBIT_LIMITS = {
+  minPolarAngle: 0,
+  maxPolarAngle: Math.PI / 2,
+  minAzimuthAngle: -Math.PI / 8,
+  maxAzimuthAngle: Math.PI / 8,
+  minDistance: 8,
+  maxDistance: 100,
+};
+
 export const STAGE_ENVIRONMENT = {
   path: '/assets/hdri/',
   files: ['px.png', 'nx.png', 'py.png', 'ny.png', 'pz.png', 'nz.png'],

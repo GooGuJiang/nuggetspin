@@ -5,6 +5,7 @@ import { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import gsap from "gsap";
 import { useCallback, useEffect, useRef } from "react";
 import { Vector3 } from "three";
+import { CAMERA_ORBIT_LIMITS } from "../config/scene";
 
 
 interface Point {
@@ -65,13 +66,15 @@ return (<>
 <OrbitControls
     ref={ref}
     panSpeed={1}
-    minPolarAngle={Math.PI / 6} // 将最小极角设为30度
-    maxPolarAngle={Math.PI / 2}
-    minAzimuthAngle={0}
-    maxAzimuthAngle={0}
-    minDistance={10} 
-        maxDistance={100}
+    minPolarAngle={CAMERA_ORBIT_LIMITS.minPolarAngle}
+    maxPolarAngle={CAMERA_ORBIT_LIMITS.maxPolarAngle}
+    minAzimuthAngle={CAMERA_ORBIT_LIMITS.minAzimuthAngle}
+    maxAzimuthAngle={CAMERA_ORBIT_LIMITS.maxAzimuthAngle}
+    minDistance={CAMERA_ORBIT_LIMITS.minDistance} 
+    maxDistance={CAMERA_ORBIT_LIMITS.maxDistance}
     enablePan={false}
+    enableDamping
+    dampingFactor={0.08}
   enabled={isOrbitControls}
 />
     </>

@@ -2,6 +2,7 @@ import { Html } from '@react-three/drei';
 import { motion, type AnimationControls } from 'framer-motion';
 import { IoPlayCircle } from 'react-icons/io5';
 import { getFontSize } from '../../utils/getFontSize';
+import { SpinnerLogo } from '../SpinnerLogo/SpinnerLogo';
 
 interface StartOverlayProps {
   controls: AnimationControls;
@@ -30,14 +31,7 @@ export function StartOverlay({
       center
     >
       <motion.div animate={controls} className="flex justify-center items-center">
-        <img
-          src="/logo.svg"
-          alt="Logo"
-          style={{
-            top: '-180px',
-          }}
-          className="rotate-animation w-32 h-32 absolute transform -translate-y-1/2"
-        />
+        <SpinnerLogo />
         <motion.button
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}

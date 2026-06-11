@@ -12,8 +12,11 @@ i18n
   .use(initReactI18next)
   .init({
     fallbackLng: 'en', // 默认语言为英文
+    supportedLngs: ['en', 'zh', 'zh-CN', 'zh-TW'],
+    nonExplicitSupportedLngs: true,
     detection: {
-      order: ['navigator'], // 优先使用浏览器语言设置进行检测
+      order: ['querystring', 'localStorage', 'navigator'],
+      caches: ['localStorage'],
     },
     backend: {
       loadPath: '/locales/{{lng}}/{{ns}}.json', // 语言资源的加载路径
